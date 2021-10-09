@@ -18,19 +18,19 @@ int main(int argc, char **argv) {
         }
         std::cerr << "------\n" << "Index size is " << searcher.get_index_size() << "\n------\n";
         std::cerr<<"writing inverse_index.txt"<<"\n";
-        searcher.write_inverse_index("inverse_index.txt");
+        searcher.write_inverse_index("./data/inverse_index.txt");
         std::cerr<<"writing map {id : url}\n";
-        searcher.write_ids_to_urls("ids_urls.txt");
+        searcher.write_ids_to_urls("./data/ids_urls.txt");
         //
         std::cerr<<"compressing index\n";
         searcher.compress_varbyte_index();
         std::cerr<<"------\nCompressed size is " << searcher.get_compressed_size()<<"\n------\n";
-        searcher.write_compressed_index("compressed.txt");
+        searcher.write_compressed_index("./data/compressed.txt");
     }
     else {
         std::cerr<<"loading index from file\n";
-        searcher.load_inverse_index("inverse_index.txt");
-        searcher.load_ids_to_urls("ids_urls.txt");
+        searcher.load_inverse_index("./data/inverse_index.txt");
+        searcher.load_ids_to_urls("./data/ids_urls.txt");
     }
     std::cerr<<"compressing index\n";
     searcher.compress_varbyte_index();
