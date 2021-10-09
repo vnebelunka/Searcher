@@ -15,7 +15,7 @@ std::vector<std::string> Searcher::split(const std::string& s, char delimiter)
     std::set<char> marks = {',', ':', '?', '!', '.', ')'};
     while (std::getline(tokenStream, token, delimiter))
     {
-        if(marks.find(token.back()) != marks.end())
+        if(token.size() != 1 && (marks.find(token.back()) != marks.end()))
             token.pop_back();
         tokens.push_back(token);
     }
@@ -96,7 +96,9 @@ std::vector<unsigned> Searcher::naive_search(std::vector<std::string> words) {
         }
         ans = decompress_varbyte(it->second);
     }
-    for(int i = 1; i < words.size(); ++i){
+    for(unsigned i = 1; i < words.size(); ++i){
+        if(words[i] == "&" || words[i] == "|" || words[i] == "(" || words[i] == ")")
+            continue;
         curword = words[i];
         std::vector<unsigned> temp;
         if(!inverse_index.empty()) {
@@ -125,8 +127,15 @@ std::vector<unsigned> Searcher::naive_search(std::vector<std::string> words) {
 
 
 void Searcher::search(std::vector<std::string> words){
+    unsigned start = clock();
+
     //auto ids = naive_search(std::move(words));
     auto ids = stream_search(std::move(words));
+
+    unsigned int end = clock(); // конечное время;
+    double seconds = (double)(end - start) / CLOCKS_PER_SEC;
+    std::cout << "Time total = " << seconds << std::endl;
+
     std::cout<<"Results are:\n";
     for(auto id : ids){
         std::cout<<ID_url.find(id)->second<<std::endl;
@@ -157,7 +166,7 @@ void Searcher::load_inverse_index(const std::string &file_name){
         std::vector<std::string> words = split(s, ' ');
         std::string word = words[0];
         std::vector<unsigned> ids;
-        for(int i = 1; i < words.size(); ++i){
+        for(unsigned i = 1; i < words.size(); ++i){
             ids.push_back(std::stoi(words[i]));
         }
         inverse_index.insert({word, ids});
@@ -210,14 +219,9 @@ void Searcher::load_compressed_index(const std::string &file_name) {
         std::vector<std::string> words = split(s, ' ');
         std::string word_s = words[0];
         std::vector<unsigned char> temp(words.size());
-        for(int i = 1; i < words.size(); ++i)
+        for(unsigned i = 1; i < words.size(); ++i)
             temp.push_back((unsigned char)words[i][0]);
-        //std::vector<unsigned> ids = decompress_varbyte(temp);
         inverse_index_compressed.insert({word_s, temp});
-        //for(int i = 1; i < words.size(); ++i){
-        //    ids.push_back((temp[i]));
-        //}
-        //inverse_index.insert({word_s, ids});
     }
 }
 
@@ -226,7 +230,7 @@ std::vector<unsigned char> Searcher::compress_varbyte(std::vector<unsigned int> 
     std::vector<unsigned char> ans;
     std::vector<unsigned> diff(v.size());
     diff[0] = v[0];
-    for(int i = 1; i < v.size(); ++ i){
+    for(unsigned i = 1; i < v.size(); ++ i){
         diff[i] = v[i] - v[i-1];
     }
 

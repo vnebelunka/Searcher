@@ -1,7 +1,7 @@
 #include "Searcher.h"
 #include <vector>
 #include <string>
-#include <fstream>
+#include <ctime>
 #include <iostream>
 
 Searcher::Node::Node(int op1,std::vector<unsigned char>*v1, Node *l, Node *r) : v(v1) {
@@ -20,7 +20,7 @@ Searcher::Node* Searcher::create_tree(std::vector<std::string> vs, int first_ind
 
     using Node = Searcher::Node;
 
-    if((unsigned)last_index >= vs.size())
+    if(last_index >= vs.size())
         return nullptr;
     if (last_index == first_index) {
         // return { 0, dict_word_to_pointer[vs[0]], 0, 0 };
@@ -116,7 +116,7 @@ unsigned Searcher::proceed(Node *node, unsigned id){
             return 0;
         return n1; // == n2
     }
-    std::cerr<<"Can't proceed operand";
+    std::cerr<<"Unknown operand for proceed\n";
     return 0;
 }
 

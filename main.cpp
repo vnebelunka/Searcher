@@ -36,7 +36,6 @@ int main(int argc, char **argv) {
     searcher.compress_varbyte_index();
     std::cout<<"Ready to request!\n\n";
     std::string request;
-    unsigned number;
     while(getline(std::cin, request)){
         std::vector<std::string> words = searcher.split(request, ' ');
         searcher.search(words);
