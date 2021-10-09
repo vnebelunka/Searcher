@@ -1,7 +1,7 @@
 # Searcher
 
 # Как запустить
-- В случае, если обратный индекс, обратный индекс и словарь уже создан (ids_urls.txt; index.txt, inverse index.txt)
+- В случае, если обратный индекс, обратный индекс и словарь уже создан (./data/ids_urls.txt; ./data/index.txt, ./data/inverse index.txt)
 ```
   make
   ./Searcher
